@@ -104,4 +104,7 @@ switch($url)
         EmprestimoController::cadastro();
     break;
 
+    case "/emprestimo/delete":
+        EmprestimoController::delete();
+    break;
 }
