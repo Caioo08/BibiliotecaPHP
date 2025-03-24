@@ -54,7 +54,7 @@ final class Aluno extends Model
         return new AlunoDAO()->selectById($id);
     }
 
-    function getAllRows() ; array
+    function getAllRows() : array
     {
         $this->rows = new AlunoDAO()->select();
 
