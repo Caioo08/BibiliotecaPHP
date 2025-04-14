@@ -73,3 +73,4 @@ final class AlunoDAO extends DAO
         return $stmt->execute();
     }
 }
+?>

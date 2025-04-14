@@ -37,7 +37,6 @@ final class Aluno extends Model
         set{
             if(strlen($value)<3)
                 throw new Exception("Curso deve ter no mínimo 3 caracteres.");
-
                 $this->Curso = $value;
         }
 
