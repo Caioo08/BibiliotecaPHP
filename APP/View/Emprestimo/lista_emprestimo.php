@@ -12,26 +12,30 @@
 
     <div>
         <?php include VIEWS . '/Includes/menu.php' ?>
-        <h1>Lista de Alunos</h1>
-        <a href="/aluno/cadastro">Novo Aluno</a>
+
+        <h1>Lista de Emprestimos</h1>
+
+        <a href="/emprestimo/cadastro">Novo Emprestimo</a>
+
         <?= $model->getErrors() ?>
+
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Curso</th>
+                    <th scope="col">Aluno</th>
+                    <th scope="col">Livro</th>
+                    <th scope="col">Data Devolução</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($model->rows as $aluno): ?>
+                <?php foreach($model->rows as $item): ?>
                 <tr>
-                    <td> <?= $aluno->Id ?> </td>
-                    <td> <a href="/aluno/cadastro?id=<?= $aluno->Id ?>">
-                        <?= $aluno->Nome ?></a> </td>
-                    <td> <?= $aluno->RA ?> </td>
-                    <td> <?= $aluno->Curso ?> </td>
-                    <td> <a href="/aluno/delete?id=<?= $aluno->Id ?>">Remover</a> </td>
+                    <td> <?= $item->Id ?> </td>
+                    <td> <a href="/emprestimo/cadastro?id=<?= $item->Id ?>"><?= $item->Dados_Aluno->Nome ?></a> </td>
+                    <td> <?= $item->Dados_Livro->Titulo ?> </td>
+                    <td> <?= $item->Data_Devolucao ?> </td>
+                    <td> <a href="/emprestimo/delete?id=<?= $item->Id ?>">Remover</a> </td>
                 </tr>
                 <?php endforeach ?>
             </tbody>

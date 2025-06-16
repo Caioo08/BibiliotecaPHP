@@ -1,80 +1,73 @@
 <?php
 
-namespace App\Controller;
+namespace App\Model;
 
-use App\Model\Autor;
+use App\DAO\AutorDAO;
 use Exception;
-
-
-final class AutorController extends Controller
+final class Autor extends Model
 {
-    public static function index() : void
+    public ?int $Id = null;
+
+    public ?string $Nome
     {
-        parent::isProtected(); 
+        set
+        {
+            if(strlen($value) < 3)
+                throw new Exception("Nome deve ter no mínimo 3 caracteres.");
 
-        $model = new Autor();
-        
-        try {
-            $model->getAllRows();
-
-        } catch(Exception $e) {
-            $model->setError("Ocorreu um erro ao buscar os autores:");
-            $model->setError($e->getMessage());
+            $this->Nome = $value;
         }
 
-        parent::render('Autor/lista_autor.php', $model); 
-    } 
+        get => $this->Nome ?? null;
+    }
 
-    public static function cadastro() : void
+
+    public ?string $Data_Nascimento
     {
-        parent::isProtected(); 
-
-        $model = new Autor();
-        
-        try
+        set
         {
-            if(parent::isPost())
-            {
-                $model->Id = !empty($_POST['id']) ? $_POST['id'] : null;
-                $model->Nome = $_POST['nome'];
-                $model->Data_Nascimento = $_POST['data_de_nascimento'];
-                $model->CPF = $_POST['cpf'];
-                $model->save();
+            if(empty($value))
+                throw new Exception("Preencha a Data de Nascimento");
 
-                parent::redirect("/autor");
-
-            } else {
-    
-                if(isset($_GET['id']))
-                {              
-                    $model = $model->getById( (int) $_GET['id'] );
-                }
-            }
-
-        } catch(Exception $e) {
-
-            $model->setError($e->getMessage());
+            $this->Data_Nascimento = $value;
         }
 
-        parent::render('Autor/form_autor.php', $model);        
-    } 
-    
-    public static function delete() : void
+        get => $this->Data_Nascimento ?? null;
+    }
+
+
+    public ?string $CPF
     {
-        parent::isProtected(); 
-
-        $model = new Autor();
-        
-        try 
+        set
         {
-            $model->delete( (int) $_GET['id']);
-            parent::redirect("/autor");
+            if(strlen($value) < 11)
+                throw new Exception("CPF deve ter no mínimo 11 caracteres.");
 
-        } catch(Exception $e) {
-            $model->setError("Ocorreu um erro ao excluir o autor:");
-            $model->setError($e->getMessage());
-        } 
-        
-        parent::render('Autor/lista_autor.php', $model);  
+            $this->CPF = $value;
+        }
+
+        get => $this->CPF ?? null;
+    }
+
+    function save() : Autor
+    {
+        return new AutorDAO()->save($this);
+    }
+
+    function getById(int $id) : ?Autor
+    {
+        return new AutorDAO()->selectById($id);
+    }
+
+    function getAllRows() : array
+    {
+        $this->rows = new AutorDAO()->select();
+
+        return $this->rows;
+    }
+
+    function delete(int $id) : bool
+    {
+        return new AutorDAO()->delete($id);
     }
 }

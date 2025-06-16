@@ -2,32 +2,33 @@
 
 namespace App\Controller;
 
-use App\Model\Aluno;
-
+use App\Model\Autor;
 use Exception;
 
 final class AutorController extends Controller
 {
     public static function index() : void
     {
-        parent::isProtected();
+        parent::isProtected(); 
 
         $model = new Autor();
-
-        try{
+        
+        try {
             $model->getAllRows();
-        }catch(Exception $e){
+
+        } catch(Exception $e) {
             $model->setError("Ocorreu um erro ao buscar os autores:");
             $model->setError($e->getMessage());
         }
 
-        parent::render('Aluno/lista_aluno.php', $model);
-    }
+        parent::render('Autor/lista_autor.php', $model); 
+    } 
+
     public static function cadastro() : void
     {
         parent::isProtected(); 
 
-        $model = new Aluno();
+        $model = new Autor();
         
         try
         {
@@ -35,8 +36,8 @@ final class AutorController extends Controller
             {
                 $model->Id = !empty($_POST['id']) ? $_POST['id'] : null;
                 $model->Nome = $_POST['nome'];
-                $model->RA = $_POST['data_de_nascimento'];
-                $model->Curso = $_POST['cpf'];
+                $model->Data_Nascimento = $_POST['data_nascimento'];
+                $model->CPF = $_POST['cpf'];
                 $model->save();
 
                 parent::redirect("/autor");
@@ -54,8 +55,9 @@ final class AutorController extends Controller
             $model->setError($e->getMessage());
         }
 
-        parent::render('Aluno/form_autor.php', $model);        
+        parent::render('Autor/form_autor.php', $model);        
     } 
+    
     public static function delete() : void
     {
         parent::isProtected(); 
@@ -68,11 +70,10 @@ final class AutorController extends Controller
             parent::redirect("/autor");
 
         } catch(Exception $e) {
-            $model->setError("Ocorreu um erro ao excluir o aluno:");
+            $model->setError("Ocorreu um erro ao excluir o autor:");
             $model->setError($e->getMessage());
         } 
         
-        parent::render('Aluno/lista_autor.php', $model);  
+        parent::render('Autor/lista_autor.php', $model);  
     }
-    
-}//Fim da classe
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dao;
+namespace App\DAO;
 
 use App\Model\Autor;
 
@@ -18,47 +18,49 @@ final class AutorDAO extends DAO
 
     public function insert(Autor $model) : Autor
     {
-        $sql = "INSERT INTO autor (nome,data_de_nascimento,cpf) VALUES (?,?,?) ";
+        $sql = "INSERT INTO autor (nome, data_nascimento, cpf) VALUES (?, ?, ?) ";
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $model->Nome);
-        $stmt->bindValue(2, $model->data_de_nascimento);
-        $stmt->bindValue(3, $model->cpf);
-        $model->Id = parent::$conexao->lastInsertId();
+        $stmt->bindValue(2, $model->Data_Nascimento);
+        $stmt->bindValue(3, $model->CPF);
         $stmt->execute();
 
+        $model->Id = parent::$conexao->lastInsertId();
+        
         return $model;
     }
 
     public function update(Autor $model) : Autor
     {
-        $sql = "UPDATE autor SET nome=?, data_de_nascimento=?, cpf=? WHERE id=?"/
+        $sql = "UPDATE autor SET nome=?, data_nascimento=?, cpf=? WHERE id=? ";
 
         $stmt = parent::$conexao->prepare($sql);
         $stmt->bindValue(1, $model->Nome);
-        $stmt->bindValue(2, $model->data_de_nascimento);
-        $stmt->bindValue(3, $model->cpf);
+        $stmt->bindValue(2, $model->Data_Nascimento);
+        $stmt->bindValue(3, $model->CPF);
         $stmt->bindValue(4, $model->Id);
         $stmt->execute();
-
-        return $stmt;
+        
+        return $model;
     }
 
     public function selectById(int $id) : ?Autor
     {
         $sql = "SELECT * FROM autor WHERE id=? ";
 
-        $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1,$id);
+        $stmt = parent::$conexao->prepare($sql);  
+        $stmt->bindValue(1, $id);
         $stmt->execute();
 
         return $stmt->fetchObject("App\Model\Autor");
     }
 
+
     public function select() : array
     {
         $sql = "SELECT * FROM autor ";
 
-        $stmt = parent::$conexao->prepare($sql);
+        $stmt = parent::$conexao->prepare($sql);  
         $stmt->execute();
 
         return $stmt->fetchAll(DAO::FETCH_CLASS, "App\Model\Autor");
@@ -68,9 +70,8 @@ final class AutorDAO extends DAO
     {
         $sql = "DELETE FROM autor WHERE id=? ";
 
-        $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1,$id);
+        $stmt = parent::$conexao->prepare($sql);  
+        $stmt->bindValue(1, $id);
         return $stmt->execute();
     }
 }
-?>
