@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Dao;
+namespace App\DAO;
 
-use App\Model\categoria;
+use App\Model\Categoria;
 
 final class CategoriaDAO extends DAO
 {
@@ -18,47 +18,49 @@ final class CategoriaDAO extends DAO
 
     public function insert(Categoria $model) : Categoria
     {
-        $sql = "INSERT INTO Categoria (nome,ra,curso) VALUES (?,?,?) ";
+        $sql = "INSERT INTO categoria (descricao) VALUES (?) ";
+
         $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1, $model->Nome);
-        $stmt->bindValue(2, $model->RA);
-        $stmt->bindValue(3, $model->Curso);
-        $model->Id = parent::$conexao->lastInsertId();
+        
+        $stmt->bindValue(1, $model->Descricao);
+
         $stmt->execute();
 
+        $model->Id = parent::$conexao->lastInsertId();
+        
         return $model;
     }
 
     public function update(Categoria $model) : Categoria
     {
-        $sql = "UPDATE categoria SET nome=?, ra=?, curso=? WHERE id=?"/
+        $sql = "UPDATE categoria SET descricao=? WHERE id=? ";
 
         $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1, $model->Nome);
-        $stmt->bindValue(2, $model->RA);
-        $stmt->bindValue(3, $model->Curso);
-        $stmt->bindValue(4, $model->Id);
+        $stmt->bindValue(1, $model->Descricao);
+        $stmt->bindValue(2, $model->Id);
         $stmt->execute();
-
-        return $stmt;
+        
+        return $model;
     }
+
 
     public function selectById(int $id) : ?Categoria
     {
         $sql = "SELECT * FROM categoria WHERE id=? ";
 
-        $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1,$id);
+        $stmt = parent::$conexao->prepare($sql);  
+        $stmt->bindValue(1, $id);
         $stmt->execute();
 
         return $stmt->fetchObject("App\Model\Categoria");
     }
 
+
     public function select() : array
     {
         $sql = "SELECT * FROM categoria ";
 
-        $stmt = parent::$conexao->prepare($sql);
+        $stmt = parent::$conexao->prepare($sql);  
         $stmt->execute();
 
         return $stmt->fetchAll(DAO::FETCH_CLASS, "App\Model\Categoria");
@@ -68,9 +70,8 @@ final class CategoriaDAO extends DAO
     {
         $sql = "DELETE FROM categoria WHERE id=? ";
 
-        $stmt = parent::$conexao->prepare($sql);
-        $stmt->bindValue(1,$id);
+        $stmt = parent::$conexao->prepare($sql);  
+        $stmt->bindValue(1, $id);
         return $stmt->execute();
     }
 }
-?>
